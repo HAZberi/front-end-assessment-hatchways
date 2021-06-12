@@ -1,9 +1,13 @@
 import React from "react";
+import ApiResults from "./data/ApiResults";
+import "./App.css";
 
 const App = () => {
   return (
-      <h1>Hatchways</h1>
-  )
-}
+    <>
+      <ApiResults />
+    </>
+  );
+};
 
 export default App;
