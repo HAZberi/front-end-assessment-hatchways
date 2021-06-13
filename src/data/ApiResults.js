@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   appBackground: {
     backgroundColor: theme.palette.common.whitesmoke,
     width: "100%",
-    height: "100%",
+    height: "100vh",
   },
   dataContainer: {
     marginBottom: "7vh",
@@ -53,7 +53,6 @@ const ApiResults = () => {
       return null;
     }
     const filterNamesByValue = (data = [], value = "") => {
-      if (data.length === 0 || value === null || value === "") return null;
       const filterDataByName = data.filter((student) => {
         if (
           student.firstName.toLowerCase().includes(value) ||
@@ -62,13 +61,10 @@ const ApiResults = () => {
           return true;
         return false;
       });
-      //console.log(filterDataByName);
-      if (filterDataByName.length === 0) return null;
       return filterDataByName;
     };
     const getFilteredData = filterNamesByValue(students, value);
-    //console.log(getFilteredData);
-    if (!getFilteredData || getFilteredData.length === 0) return null;
+    console.log(getFilteredData);
     setFilteredData(getFilteredData);
   };
 
