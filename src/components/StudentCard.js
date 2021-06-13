@@ -18,10 +18,11 @@ const useStyles = makeStyles((theme) => ({
     borderStyle: "solid",
     borderWidth: "1px",
     borderColor: `rgba(0, 0, 0, 0.25)`,
-    margin: theme.spacing(4),
+    margin: theme.spacing(2),
+    marginRight: theme.spacing(5)
   },
   infoContainer: {
-      marginLeft: "1rem"
+      marginLeft: "1rem",
   }
 }));
 

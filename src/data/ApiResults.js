@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import hatchwaysApi from "../api/hatchways";
 import StudentCard from "../components/StudentCard";
-import { Grid, Paper, List } from "@material-ui/core";
+import { Grid, Paper, List, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -18,6 +18,11 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "scroll",
     borderRadius: "10px",
   },
+  inputField: {
+    paddingLeft: "1rem",
+    width: "96.5%",
+    opacity: 0.6,
+  },
 }));
 
 const ApiResults = () => {
@@ -27,15 +32,44 @@ const ApiResults = () => {
   //We are not using Redux or Flux since state management is simple
   //and app's component architecture is relatively flat.
   const [students, setStudents] = useState([]);
+  const [filteredData, setFilteredData] = useState(students);
 
   const getStudentData = async () => {
     try {
       const response = await hatchwaysApi.get("/assessment/students");
       setStudents(response.data.students);
-      //console.log(response.data);
+      setFilteredData(response.data.students);
     } catch (err) {
       //console.log(err);
     }
+  };
+
+  const searchByNameHandler = (e) => {
+    const value = e.target.value;
+    //console.log(value);
+    //console.log(students);
+    if (!value) {
+      setFilteredData(students);
+      return null;
+    }
+    const filterNamesByValue = (data = [], value = "") => {
+      if (data.length === 0 || value === null || value === "") return null;
+      const filterDataByName = data.filter((student) => {
+        if (
+          student.firstName.toLowerCase().includes(value) ||
+          student.lastName.toLowerCase().includes(value)
+        )
+          return true;
+        return false;
+      });
+      //console.log(filterDataByName);
+      if (filterDataByName.length === 0) return null;
+      return filterDataByName;
+    };
+    const getFilteredData = filterNamesByValue(students, value);
+    //console.log(getFilteredData);
+    if (!getFilteredData || getFilteredData.length === 0) return null;
+    setFilteredData(getFilteredData);
   };
 
   useEffect(() => {
@@ -50,8 +84,17 @@ const ApiResults = () => {
           elevation={2}
           className={classes.dataContainer}
         >
+          <TextField
+            id="search-by-name"
+            className={classes.inputField}
+            placeholder="Search by name"
+            margin="normal"
+            color="secondary"
+            onChange={searchByNameHandler}
+            fullWidth
+          />
           <List>
-            {students.map((student) => (
+            {filteredData.map((student) => (
               <StudentCard key={student.id} data={student} />
             ))}
           </List>

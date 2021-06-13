@@ -39,6 +39,15 @@ const theme = createMuiTheme({
       },
     },
   },
+  overrides: {
+    MuiInput: {
+      root: {
+        fontWeight: 400,
+        paddingBottom: "0.5rem",
+        fontSize: "1.25rem",
+      },
+    },
+  },
 });
 
 export default theme;
