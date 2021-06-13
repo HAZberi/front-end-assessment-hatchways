@@ -1,23 +1,60 @@
 import React from "react";
-import { Typography } from "@material-ui/core";
+import {
+  Typography,
+  Grid,
+  ListItem,
+  ListItemAvatar,
+  Avatar,
+  Divider,
+  ListItemText,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import calculateAverage from "../helpers/calculateAvg";
-import capitalize from "../helpers/capitalize";
+
+const useStyles = makeStyles((theme) => ({
+  avatar: {
+    height: theme.spacing(15),
+    width: theme.spacing(15),
+    borderStyle: "solid",
+    borderWidth: "1px",
+    borderColor: `rgba(0, 0, 0, 0.25)`,
+    margin: theme.spacing(4),
+  },
+  infoContainer: {
+      marginLeft: "1rem"
+  }
+}));
 
 const StudentCard = ({ data }) => {
+  const classes = useStyles();
   const { firstName, lastName, email, company, skill, pic, grades } = data;
   const gradeAverage = calculateAverage(grades);
   return (
-    <div>
-      <img src={pic} alt="avatar" />
-      <Typography variant="h3">{`${capitalize(firstName)} ${capitalize(lastName)}`}</Typography>
-      <div>
-        <p>Email: {email}</p>
-        <p>Comapany: {company}</p>
-        <p>Skill: {skill}</p>
-        <p>Average: {gradeAverage}</p>
-      </div>
-      <br />
-    </div>
+    <>
+      <ListItem alignItems="flex-start">
+        <ListItemAvatar>
+          <Avatar src={pic} alt="avatar" className={classes.avatar} />
+        </ListItemAvatar>
+        <ListItemText>
+          <Typography variant="h1">{`${firstName.toUpperCase()} ${lastName.toUpperCase()}`}</Typography>
+          <Grid container direction="column" className={classes.infoContainer}>
+            <Grid item>
+              <Typography variant="body1">Email: {email}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body1">Comapany: {company}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body1">Skill: {skill}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body1">Average: {gradeAverage}</Typography>
+            </Grid>
+          </Grid>
+        </ListItemText>
+      </ListItem>
+      <Divider light />
+    </>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import hatchwaysApi from "../api/hatchways";
 import StudentCard from "../components/StudentCard";
-import { Grid, Paper } from "@material-ui/core";
+import { Grid, Paper, List } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,11 +21,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ApiResults = () => {
-    //To access Styles
+  //To access Styles
   const classes = useStyles();
-    //React States
-    //We are not using Redux or Flux since state management is simple
-    //and app's component architecture is relatively flat.
+  //React States
+  //We are not using Redux or Flux since state management is simple
+  //and app's component architecture is relatively flat.
   const [students, setStudents] = useState([]);
 
   const getStudentData = async () => {
@@ -45,10 +45,16 @@ const ApiResults = () => {
   return (
     <Grid container className={classes.appBackground}>
       <Grid item container direction="column" alignItems="center">
-        <Paper variant="elevation" elevation={2} className={classes.dataContainer}>
-          {students.map((student) => (
-            <StudentCard key={student.id} data={student} />
-          ))}
+        <Paper
+          variant="elevation"
+          elevation={2}
+          className={classes.dataContainer}
+        >
+          <List>
+            {students.map((student) => (
+              <StudentCard key={student.id} data={student} />
+            ))}
+          </List>
         </Paper>
       </Grid>
     </Grid>
