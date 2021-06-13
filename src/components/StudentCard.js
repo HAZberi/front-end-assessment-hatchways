@@ -1,4 +1,5 @@
 import React from "react";
+import { Typography } from "@material-ui/core";
 import calculateAverage from "../helpers/calculateAvg";
 import capitalize from "../helpers/capitalize";
 
@@ -8,7 +9,7 @@ const StudentCard = ({ data }) => {
   return (
     <div>
       <img src={pic} alt="avatar" />
-      <h3>{`${capitalize(firstName)} ${capitalize(lastName)}`}</h3>
+      <Typography variant="h3">{`${capitalize(firstName)} ${capitalize(lastName)}`}</Typography>
       <div>
         <p>Email: {email}</p>
         <p>Comapany: {company}</p>
