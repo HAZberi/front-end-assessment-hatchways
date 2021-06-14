@@ -3,7 +3,6 @@ import { createMuiTheme } from "@material-ui/core/styles";
 const whitesmoke = "#f5f5f5";
 const white = "#fff";
 const black = "#000";
-const grey = "#696969";
 const theme = createMuiTheme({
   palette: {
     common: {
@@ -28,7 +27,7 @@ const theme = createMuiTheme({
       fontFamily: "Raleway",
       fontSize: "1rem",
       fontWeight: 300,
-      color: `${grey}`,
+      color: `${black}`,
     },
     expandButton: {
       color: `${black}`,
