@@ -29,14 +29,6 @@ const theme = createMuiTheme({
       fontWeight: 300,
       color: `${black}`,
     },
-    expandButton: {
-      color: `${black}`,
-      border: "none",
-      opacity: 0.7,
-      "&:hover": {
-        opacity: 1,
-      },
-    },
   },
   overrides: {
     MuiInput: {
@@ -44,6 +36,13 @@ const theme = createMuiTheme({
         fontWeight: 400,
         paddingBottom: "0.5rem",
         fontSize: "1.25rem",
+      },
+    },
+    MuiChip: {
+      root: {
+        "& .MuiChip-label": {
+          padding: 0,
+        },
       },
     },
   },

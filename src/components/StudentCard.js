@@ -31,11 +31,20 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "1rem",
     marginBottom: theme.spacing(1),
   },
+  tagStyles: {
+    padding: "20px 10px",
+    marginRight: "5px",
+    marginTop: "7px",
+    borderRadius: "5px",
+    fontSize: "1rem",
+    fontFamily: "Raleway",
+  },
 }));
 
 const StudentCard = ({ data, createNewTag }) => {
   const classes = useStyles();
-  const { firstName, lastName, email, company, skill, pic, grades, id, tags } = data;
+  const { firstName, lastName, email, company, skill, pic, grades, id, tags } =
+    data;
   const gradeAverage = calculateAverage(grades);
 
   const [open, setOpen] = useState(false);
@@ -66,23 +75,24 @@ const StudentCard = ({ data, createNewTag }) => {
               <Typography variant="body1">Average: {gradeAverage}</Typography>
             </Grid>
             <Grid item>
-              <Collapse
-                in={open}
-                timeout="auto"
-                unmountOnExit
-              >
+              <Collapse in={open} timeout="auto" unmountOnExit>
                 <TestList grades={grades} />
               </Collapse>
             </Grid>
             <Grid item container>
-                {tags.map((tag, i) => (
-                    <Grid item key={i}>
-                        <Chip label={tag}/>
-                    </Grid>
-                ))}
+              {tags.map((tag, i) => (
+                <Grid item key={i}>
+                  <Chip label={tag} className={classes.tagStyles} />
+                </Grid>
+              ))}
             </Grid>
             <Grid item>
-              <TagForm id={id} createNewTag={createNewTag} newTagState={newTag} setNewTagState={setNewTag}/>
+              <TagForm
+                id={id}
+                createNewTag={createNewTag}
+                newTagState={newTag}
+                setNewTagState={setNewTag}
+              />
             </Grid>
           </Grid>
         </ListItemText>
