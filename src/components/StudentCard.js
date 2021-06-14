@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
   infoContainer: {
     marginLeft: "1rem",
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
   },
 }));
 
