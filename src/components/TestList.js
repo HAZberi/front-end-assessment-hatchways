@@ -4,8 +4,8 @@ import { List, ListItem, ListItemText, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   testList: {
-    marginLeft: theme.spacing(26),
-    marginBottom: theme.spacing(4),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(1),
   },
   testListItem: {
     margin: 0,

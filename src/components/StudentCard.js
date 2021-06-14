@@ -59,6 +59,11 @@ const StudentCard = ({ data }) => {
             <Grid item>
               <Typography variant="body1">Average: {gradeAverage}</Typography>
             </Grid>
+            <Grid item>
+              <Collapse in={open} timeout="auto" unmountOnExit>
+                <TestList grades={grades} />
+              </Collapse>
+            </Grid>
           </Grid>
         </ListItemText>
         {open ? (
@@ -67,9 +72,6 @@ const StudentCard = ({ data }) => {
           <ExpandMore handleClickEvent={handleListItemExpansion} />
         )}
       </ListItem>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <TestList grades={grades} />
-      </Collapse>
       <Divider light />
     </>
   );
