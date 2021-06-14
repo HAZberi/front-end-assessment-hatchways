@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import hatchwaysApi from "../api/hatchways";
 import StudentCard from "../components/StudentCard";
+import addTagsField from "../helpers/addTagsField";
 import { Grid, Paper, List, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -34,11 +35,12 @@ const ApiResults = () => {
   const [students, setStudents] = useState([]);
   const [filteredData, setFilteredData] = useState(students);
 
-  const getStudentData = async () => {
+  const getStudentData = async (createTagsField) => {
     try {
       const response = await hatchwaysApi.get("/assessment/students");
-      setStudents(response.data.students);
-      setFilteredData(response.data.students);
+      const transformedData = createTagsField(response.data.students); 
+      setStudents(transformedData);
+      setFilteredData(transformedData);
     } catch (err) {
       //console.log(err);
     }
@@ -69,7 +71,7 @@ const ApiResults = () => {
   };
 
   useEffect(() => {
-    getStudentData();
+    getStudentData(addTagsField);
   }, []);
 
   return (
