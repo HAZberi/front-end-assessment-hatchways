@@ -8,6 +8,7 @@ import {
   Divider,
   ListItemText,
   Collapse,
+  Chip,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import TestList from "./TestList";
@@ -32,11 +33,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StudentCard = ({ data, newTag }) => {
+const StudentCard = ({ data, createNewTag }) => {
   const classes = useStyles();
-  const { firstName, lastName, email, company, skill, pic, grades, id } = data;
+  const { firstName, lastName, email, company, skill, pic, grades, id, tags } = data;
   const gradeAverage = calculateAverage(grades);
+
   const [open, setOpen] = useState(false);
+  const [newTag, setNewTag] = useState("");
+
   const handleListItemExpansion = () => {
     setOpen(!open);
   };
@@ -70,8 +74,15 @@ const StudentCard = ({ data, newTag }) => {
                 <TestList grades={grades} />
               </Collapse>
             </Grid>
+            <Grid item container>
+                {tags.map((tag, i) => (
+                    <Grid item key={i}>
+                        <Chip label={tag}/>
+                    </Grid>
+                ))}
+            </Grid>
             <Grid item>
-              <TagForm id={id} createNewTag={newTag} />
+              <TagForm id={id} createNewTag={createNewTag} newTagState={newTag} setNewTagState={setNewTag}/>
             </Grid>
           </Grid>
         </ListItemText>

@@ -50,7 +50,10 @@ const ApiResults = () => {
 
   const addNewTag = (id, newTag) => {
     const updatedStudentData = pushNewTag(id, newTag, students);
-    console.log(updatedStudentData);
+    //console.log(updatedStudentData);
+    setStudents(updatedStudentData);
+    setFilteredData(updatedStudentData);
+    console.log(filteredData)
   };
 
   const searchByNameHandler = (e) => {
@@ -62,7 +65,7 @@ const ApiResults = () => {
       return null;
     }
     const getFilteredData = filterNamesByValue(students, value);
-    console.log(getFilteredData);
+    //console.log(getFilteredData);
     setFilteredData(getFilteredData);
   };
 
@@ -89,7 +92,7 @@ const ApiResults = () => {
           />
           <List>
             {filteredData.map((student) => (
-              <StudentCard key={student.id} data={student} newTag={addNewTag} />
+              <StudentCard key={student.id} data={student} createNewTag={addNewTag} />
             ))}
           </List>
         </Paper>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
 
@@ -15,15 +15,13 @@ const useStyles = makeStyles((_) => ({
   },
 }));
 
-const TagForm = ({ id, createNewTag }) => {
+const TagForm = ({ id, createNewTag, newTagState, setNewTagState }) => {
   const styleClasses = useStyles();
-
-  const [newTag, setNewTag] = useState("");
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    createNewTag(id, newTag);
-    setNewTag("");
+    createNewTag(id, newTagState);
+    setNewTagState("");
   };
 
   return (
@@ -35,8 +33,8 @@ const TagForm = ({ id, createNewTag }) => {
         placeholder="Add a tag"
         margin="normal"
         color="secondary"
-        value={newTag}
-        onChange={(e) => setNewTag(e.target.value)}
+        value={newTagState}
+        onChange={(e) => setNewTagState(e.target.value)}
       />
       <input className={styleClasses.submitStyles} type="submit" />
     </form>
