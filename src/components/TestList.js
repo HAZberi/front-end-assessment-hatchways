@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 const TestList = ({ grades }) => {
   const classes = useStyles();
   return (
-    <List component="div" disablePadding className={classes.testList}>
+    <List disablePadding className={classes.testList}>
       {grades.map((grade, i) => (
         <ListItem key={i} className={classes.testListItem}>
           <ListItemText className={classes.listItemText}>

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import hatchwaysApi from "../api/hatchways";
 import StudentCard from "../components/StudentCard";
 import addTagsField from "../helpers/addTagsField";
+import pushNewTag from "../helpers/pushNewTag";
+import filterNamesByValue from "../helpers/filterNamesByValue";
 import { Grid, Paper, List, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -29,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
 const ApiResults = () => {
   //To access Styles
   const classes = useStyles();
-  //React States
   //We are not using Redux or Flux since state management is simple
   //and app's component architecture is relatively flat.
   const [students, setStudents] = useState([]);
@@ -38,12 +39,18 @@ const ApiResults = () => {
   const getStudentData = async (createTagsField) => {
     try {
       const response = await hatchwaysApi.get("/assessment/students");
-      const transformedData = createTagsField(response.data.students); 
+      const transformedData = createTagsField(response.data.students);
+      //console.log(transformedData);
       setStudents(transformedData);
       setFilteredData(transformedData);
     } catch (err) {
-      //console.log(err);
+      console.error(`Please check your internet connection!! ${err}`);
     }
+  };
+
+  const addNewTag = (id, newTag) => {
+    const updatedStudentData = pushNewTag(id, newTag, students);
+    console.log(updatedStudentData);
   };
 
   const searchByNameHandler = (e) => {
@@ -54,17 +61,6 @@ const ApiResults = () => {
       setFilteredData(students);
       return null;
     }
-    const filterNamesByValue = (data = [], value = "") => {
-      const filterDataByName = data.filter((student) => {
-        if (
-          student.firstName.toLowerCase().includes(value) ||
-          student.lastName.toLowerCase().includes(value)
-        )
-          return true;
-        return false;
-      });
-      return filterDataByName;
-    };
     const getFilteredData = filterNamesByValue(students, value);
     console.log(getFilteredData);
     setFilteredData(getFilteredData);
@@ -93,7 +89,7 @@ const ApiResults = () => {
           />
           <List>
             {filteredData.map((student) => (
-              <StudentCard key={student.id} data={student} />
+              <StudentCard key={student.id} data={student} newTag={addNewTag} />
             ))}
           </List>
         </Paper>

@@ -13,6 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import TestList from "./TestList";
 import ExpandMore from "./ExpandMore";
 import ExpandLess from "./ExpandLess";
+import TagForm from "./TagForm";
 import calculateAverage from "../helpers/calculateAvg";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,9 +32,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StudentCard = ({ data }) => {
+const StudentCard = ({ data, newTag }) => {
   const classes = useStyles();
-  const { firstName, lastName, email, company, skill, pic, grades } = data;
+  const { firstName, lastName, email, company, skill, pic, grades, id } = data;
   const gradeAverage = calculateAverage(grades);
   const [open, setOpen] = useState(false);
   const handleListItemExpansion = () => {
@@ -61,9 +62,16 @@ const StudentCard = ({ data }) => {
               <Typography variant="body1">Average: {gradeAverage}</Typography>
             </Grid>
             <Grid item>
-              <Collapse in={open} timeout="auto" unmountOnExit>
+              <Collapse
+                in={open}
+                timeout="auto"
+                unmountOnExit
+              >
                 <TestList grades={grades} />
               </Collapse>
+            </Grid>
+            <Grid item>
+              <TagForm id={id} createNewTag={newTag} />
             </Grid>
           </Grid>
         </ListItemText>
