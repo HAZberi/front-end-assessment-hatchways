@@ -92,7 +92,8 @@ const ApiResults = () => {
     //console.log(value);
     //console.log(students);
     if (!value) {
-      setFilteredData(students);
+      //setFilteredData(students);
+      setFilteredDataByName(students);
       return null;
     }
     const getFilteredData = filterNamesByValue(students, value);
@@ -104,7 +105,8 @@ const ApiResults = () => {
   const searchByTagHandler = (e) => {
     const value = e.target.value;
     if (!value) {
-      setFilteredData(students);
+      //setFilteredData(students);
+      setFilteredDataByTag(students);
       //console.log(filteredDataByTag);
       return null;
     }
