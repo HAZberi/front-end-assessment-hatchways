@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import hatchwaysApi from "../api/hatchways";
 import StudentCard from "../components/StudentCard";
 import addTagsField from "../helpers/addTagsField";
@@ -35,8 +35,9 @@ const ApiResults = () => {
   //We are not using Redux or Flux since state management is simple
   //and app's component architecture is relatively flat.
   const [students, setStudents] = useState([]);
+  const [filteredDataByName, setFilteredDataByName] = useState([]);
+  const [filteredDataByTag, setFilteredDataByTag] = useState([]);
   const [filteredData, setFilteredData] = useState(students);
-  const [filteredDataByTag, setFilteredDataByTag] = useState(students);
 
   const getStudentData = async (createTagsField) => {
     try {
@@ -45,7 +46,6 @@ const ApiResults = () => {
       //console.log(transformedData);
       setStudents(transformedData);
       setFilteredData(transformedData);
-      setFilteredDataByTag(transformedData);
     } catch (err) {
       console.error(`Please check your internet connection!! ${err}`);
     }
@@ -56,8 +56,36 @@ const ApiResults = () => {
     //console.log(updatedStudentData);
     setStudents(updatedStudentData);
     setFilteredData(updatedStudentData);
-    console.log(filteredData)
+    console.log(filteredData);
   };
+
+  const combineFilters = useCallback(() => {
+      console.log(filteredDataByName);
+      console.log(filteredDataByTag);
+    const combinedFilterResults = [...filteredDataByName, ...filteredDataByTag];
+    if (filteredDataByName.length === 0){
+        setFilteredData(combinedFilterResults);
+        return
+    }
+    if (filteredDataByTag.length === 0){
+        setFilteredData(combinedFilterResults);
+        return
+    }
+    const studentIds = combinedFilterResults.map((student) => student.id);
+    const filtered = combinedFilterResults.filter(
+      (student, index) => studentIds.includes(student.id, index + 1)
+    );
+
+    // Array.filter() removes all duplicate objects by checking if the previously mapped id-array
+    // includes the current id ({id} destructs the object into only its id). To only filter out actual duplicates,
+    // it is using Array.includes()'s second parameter fromIndex with index + 1 which will ignore the current object and all previous.
+    // Since every iteration of the filter callback method will only search the array beginning at the
+    // current index + 1, this also dramatically reduces the runtime because only objects not previously
+    // filtered get checked.
+    // This obviously also works for any other key that is not called id or even multiple or all keys.
+    console.log(filtered);
+    setFilteredData(filtered);
+  },[filteredDataByName, filteredDataByTag]);
 
   const searchByNameHandler = (e) => {
     const value = e.target.value;
@@ -68,23 +96,29 @@ const ApiResults = () => {
       return null;
     }
     const getFilteredData = filterNamesByValue(students, value);
-    //console.log(getFilteredData);
-    setFilteredData(getFilteredData);
+    console.log(getFilteredData);
+    setFilteredDataByName(getFilteredData);
+    //combineFilters();
   };
 
   const searchByTagHandler = (e) => {
-      const value = e.target.value;
-      if (!value) {
-        setFilteredDataByTag(students);
-        console.log(filteredDataByTag);
-        return null;
-      }
+    const value = e.target.value;
+    if (!value) {
+      setFilteredData(students);
+      //console.log(filteredDataByTag);
+      return null;
+    }
 
-      const getFilteredData = filterTagsByValue(students, value);
-      console.log(getFilteredData);
-      setFilteredDataByTag(getFilteredData);
-      console.log(filteredDataByTag);
-  }
+    const getFilteredData = filterTagsByValue(students, value);
+    console.log(getFilteredData);
+    setFilteredDataByTag(getFilteredData);
+    //console.log(filteredDataByTag);
+    //combineFilters();
+  };
+
+  useEffect(()=>{
+    combineFilters();
+  },[filteredDataByTag, filteredDataByName, combineFilters])
 
   useEffect(() => {
     getStudentData(addTagsField);
@@ -117,8 +151,12 @@ const ApiResults = () => {
             fullWidth
           />
           <List>
-            {filteredDataByTag.map((student) => (
-              <StudentCard key={student.id} data={student} createNewTag={addNewTag} />
+            {filteredData.map((student) => (
+              <StudentCard
+                key={student.id}
+                data={student}
+                createNewTag={addNewTag}
+              />
             ))}
           </List>
         </Paper>
