@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import hatchwaysApi from "../api/hatchways";
 import StudentCard from "../components/StudentCard";
 import addTagsField from "../helpers/addTagsField";
 import pushNewTag from "../helpers/pushNewTag";
 import filterNamesByValue from "../helpers/filterNamesByValue";
 import filterTagsByValue from "../helpers/filterTagsByValue";
+import checkTagsExistence from "../helpers/checkTagsExistence";
 import { Grid, Paper, List, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -37,13 +38,14 @@ const ApiResults = () => {
   const [students, setStudents] = useState([]);
   const [filteredDataByName, setFilteredDataByName] = useState([]);
   const [filteredDataByTag, setFilteredDataByTag] = useState([]);
-  const [filteredData, setFilteredData] = useState(students);
+  const [filteredData, setFilteredData] = useState([]);
+  const tagSearchValue = useRef("");
+  const nameSearchValue = useRef("");
 
   const getStudentData = async (createTagsField) => {
     try {
       const response = await hatchwaysApi.get("/assessment/students");
       const transformedData = createTagsField(response.data.students);
-      //console.log(transformedData);
       setStudents(transformedData);
       setFilteredData(transformedData);
     } catch (err) {
@@ -53,27 +55,54 @@ const ApiResults = () => {
 
   const addNewTag = (id, newTag) => {
     const updatedStudentData = pushNewTag(id, newTag, students);
-    //console.log(updatedStudentData);
     setStudents(updatedStudentData);
     setFilteredData(updatedStudentData);
+    if (tagSearchValue.current !== "") {
+      const getFilteredDatabyTags = filterTagsByValue(
+        updatedStudentData,
+        tagSearchValue.current
+      );
+      setFilteredDataByTag(getFilteredDatabyTags);
+      console.log(getFilteredDatabyTags);
+    }
+    if (nameSearchValue.current !== "") {
+      const getFilteredDatabyNames = filterNamesByValue(
+        updatedStudentData,
+        nameSearchValue.current
+      );
+      console.log(getFilteredDatabyNames);
+
+      setFilteredDataByName(getFilteredDatabyNames);
+    }
     console.log(filteredData);
   };
 
   const combineFilters = useCallback(() => {
-      console.log(filteredDataByName);
-      console.log(filteredDataByTag);
+    console.log(filteredDataByName);
+    console.log(filteredDataByTag);
+    // if (!tagSearchValue && !nameSearchValue) {
+    //   //This condition handle intial render
+    //   setFilteredData(students);
+    //   console.log(filteredData);
+    //   return
+    // }
     const combinedFilterResults = [...filteredDataByName, ...filteredDataByTag];
-    if (filteredDataByName.length === 0){
-        setFilteredData(combinedFilterResults);
-        return
+    // const tagsExistenceInData = checkTagsExistence(students);
+    // console.log(tagsExistenceInData);
+    if (filteredDataByName.length === 0 || filteredDataByTag.length === 0) {
+      setFilteredData(combinedFilterResults);
+
+      return;
     }
-    if (filteredDataByTag.length === 0){
-        setFilteredData(combinedFilterResults);
-        return
-    }
+    // if (!tagsExistenceInData) {
+    //     //if user hasn't created any tags
+    //   setFilteredData([]);
+    //   return;
+    // }
+    // finding commons
     const studentIds = combinedFilterResults.map((student) => student.id);
-    const filtered = combinedFilterResults.filter(
-      (student, index) => studentIds.includes(student.id, index + 1)
+    const filtered = combinedFilterResults.filter((student, index) =>
+      studentIds.includes(student.id, index + 1)
     );
 
     // Array.filter() removes all duplicate objects by checking if the previously mapped id-array
@@ -85,15 +114,17 @@ const ApiResults = () => {
     // This obviously also works for any other key that is not called id or even multiple or all keys.
     console.log(filtered);
     setFilteredData(filtered);
-  },[filteredDataByName, filteredDataByTag]);
+  }, [filteredDataByName, filteredDataByTag]);
 
   const searchByNameHandler = (e) => {
     const value = e.target.value;
+    ///Tracking search value to control "combineFilter" calls by useEffect
+    nameSearchValue.current = value;
     //console.log(value);
     //console.log(students);
     if (!value) {
       //setFilteredData(students);
-      setFilteredDataByName(students);
+      setFilteredDataByName([]);
       return null;
     }
     const getFilteredData = filterNamesByValue(students, value);
@@ -104,23 +135,29 @@ const ApiResults = () => {
 
   const searchByTagHandler = (e) => {
     const value = e.target.value;
+    //Tracking search value to control "combineFilter" calls by useEffect
+    tagSearchValue.current = value;
     if (!value) {
       //setFilteredData(students);
-      setFilteredDataByTag(students);
+      setFilteredDataByTag([]);
       //console.log(filteredDataByTag);
       return null;
     }
 
     const getFilteredData = filterTagsByValue(students, value);
-    console.log(getFilteredData);
+    //console.log(getFilteredData);
     setFilteredDataByTag(getFilteredData);
     //console.log(filteredDataByTag);
     //combineFilters();
   };
 
-  useEffect(()=>{
-    combineFilters();
-  },[filteredDataByTag, filteredDataByName, combineFilters])
+  useEffect(() => {
+    if (tagSearchValue.current !== "" || nameSearchValue.current !== "") {
+      combineFilters();
+      return;
+    }
+    setFilteredData(students);
+  }, [filteredDataByTag, filteredDataByName, combineFilters, students]);
 
   useEffect(() => {
     getStudentData(addTagsField);
