@@ -5,7 +5,7 @@ import addTagsField from "../helpers/addTagsField";
 import pushNewTag from "../helpers/pushNewTag";
 import filterNamesByValue from "../helpers/filterNamesByValue";
 import filterTagsByValue from "../helpers/filterTagsByValue";
-import checkTagsExistence from "../helpers/checkTagsExistence";
+//import checkTagsExistence from "../helpers/checkTagsExistence";
 import { Grid, Paper, List, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -90,8 +90,11 @@ const ApiResults = () => {
     // const tagsExistenceInData = checkTagsExistence(students);
     // console.log(tagsExistenceInData);
     if (filteredDataByName.length === 0 || filteredDataByTag.length === 0) {
+        if (tagSearchValue.current !== "" && nameSearchValue !== ""){
+            setFilteredData([]);
+            return;
+        }
       setFilteredData(combinedFilterResults);
-
       return;
     }
     // if (!tagsExistenceInData) {
