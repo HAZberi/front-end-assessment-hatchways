@@ -90,7 +90,7 @@ const ApiResults = () => {
     // const tagsExistenceInData = checkTagsExistence(students);
     // console.log(tagsExistenceInData);
     if (filteredDataByName.length === 0 || filteredDataByTag.length === 0) {
-        if (tagSearchValue.current !== "" && nameSearchValue !== ""){
+        if (tagSearchValue.current !== "" && nameSearchValue.current !== ""){
             setFilteredData([]);
             return;
         }
