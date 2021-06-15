@@ -11,6 +11,7 @@ import {
   Chip,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+
 import TestList from "./TestList";
 import ExpandMore from "./ExpandMore";
 import ExpandLess from "./ExpandLess";
@@ -49,6 +50,8 @@ const StudentCard = ({ data, createNewTag }) => {
   const gradeAverage = calculateAverage(grades);
 
   const [open, setOpen] = useState(false);
+
+  //Lifted Up State from TagForm child component
   const [newTag, setNewTag] = useState("");
 
   const handleListItemExpansion = () => {

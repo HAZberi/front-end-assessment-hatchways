@@ -13,8 +13,8 @@ const useStyles = makeStyles((_) => ({
     },
   },
   iconStyles: {
-      fontSize: "3.5rem"
-  }
+    fontSize: "3.5rem",
+  },
 }));
 
 const ExpandLess = ({ handleClickEvent }) => {
