@@ -4,6 +4,7 @@ import StudentCard from "../components/StudentCard";
 import addTagsField from "../helpers/addTagsField";
 import pushNewTag from "../helpers/pushNewTag";
 import filterNamesByValue from "../helpers/filterNamesByValue";
+import filterTagsByValue from "../helpers/filterTagsByValue";
 import { Grid, Paper, List, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -35,6 +36,7 @@ const ApiResults = () => {
   //and app's component architecture is relatively flat.
   const [students, setStudents] = useState([]);
   const [filteredData, setFilteredData] = useState(students);
+  const [filteredDataByTag, setFilteredDataByTag] = useState(students);
 
   const getStudentData = async (createTagsField) => {
     try {
@@ -43,6 +45,7 @@ const ApiResults = () => {
       //console.log(transformedData);
       setStudents(transformedData);
       setFilteredData(transformedData);
+      setFilteredDataByTag(transformedData);
     } catch (err) {
       console.error(`Please check your internet connection!! ${err}`);
     }
@@ -69,6 +72,20 @@ const ApiResults = () => {
     setFilteredData(getFilteredData);
   };
 
+  const searchByTagHandler = (e) => {
+      const value = e.target.value;
+      if (!value) {
+        setFilteredDataByTag(students);
+        console.log(filteredDataByTag);
+        return null;
+      }
+
+      const getFilteredData = filterTagsByValue(students, value);
+      console.log(getFilteredData);
+      setFilteredDataByTag(getFilteredData);
+      console.log(filteredDataByTag);
+  }
+
   useEffect(() => {
     getStudentData(addTagsField);
   }, []);
@@ -90,8 +107,17 @@ const ApiResults = () => {
             onChange={searchByNameHandler}
             fullWidth
           />
+          <TextField
+            id="search-by-tag"
+            className={classes.inputField}
+            placeholder="Search by tag"
+            margin="normal"
+            color="secondary"
+            onChange={searchByTagHandler}
+            fullWidth
+          />
           <List>
-            {filteredData.map((student) => (
+            {filteredDataByTag.map((student) => (
               <StudentCard key={student.id} data={student} createNewTag={addNewTag} />
             ))}
           </List>
